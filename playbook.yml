@@ -1,0 +1,98 @@
+---
+- name: Dev Setup
+  host: localhost
+  connection: local
+  tasks:
+
+#=====================================
+# INSTALL PACKAGES
+#=====================================
+  
+    - name: Install standard software
+      pacman:
+        name:
+          - curl
+          - wget
+          - git
+
+    - name: Install development software
+      pacman:
+        name:
+          # TOOLS
+          - neovim
+          - zsh
+          - dbeaver
+          - tmux
+          - alacritty
+          # LANGUAGES
+          - dotnet-sdk
+          - python
+          - rust
+          - jdk-openjdk
+
+    - name: Install customization software
+      pacman:
+        name:
+          - polybar
+          - mate-panel
+          - rofi
+      shell: sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+    - name: Install additional software
+      pacman:
+        name:
+          # DAILY TASKS
+          - firefox
+          - chromium
+          - libreoffice-still
+          - okular
+          - thunar
+          - gimp
+          - keepasscx
+          # BACKGROUND
+          - spotify
+          - discord
+
+    - name: Install virtualization software
+      pacman:
+        name:
+          - virt-manager
+
+#=====================================
+# TIDY SETUP
+#=====================================
+
+
+
+#=====================================
+# GET CUSTOMIZATIONS
+#=====================================
+
+    - name: Install zsh-autosuggestions                                                                                                                                 
+      git:                                                                                                                                                              
+        repo: https://github.com/zsh-users/zsh-autosuggestions.git                                                                                                      
+        dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions                                                                                            
+                                                                                                                                                                        
+    - name: Install zsh-syntax-highlighting                                                                                                                             
+      git:                                                                                                                                                              
+        repo: https://github.com/zsh-users/zsh-syntax-highlighting.git                                                                                                  
+        dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting                                                                                        
+                                                                                                                                                                        
+    - name: Install zsh-completions                                                                                                                                     
+      git:                                                                                                                                                              
+        repo: https://github.com/zsh-users/zsh-completions.git                                                                                                          
+        dest: ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
+
+    - name: Install zsh-history-substring-search
+      git:
+        repo: https://github.com/zsh-users/zsh-history-substring-search.git
+        dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
+
+    - name: Create dotfiles directory:
+      file:
+        path: ~/dotfiles
+        state: directory
+
+    - name: Install dotfiles
+      git:
+        repo: https://github.com/MapManagement/dotfiles.git
