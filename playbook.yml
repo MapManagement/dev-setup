@@ -24,11 +24,13 @@
           - dbeaver
           - tmux
           - alacritty
+          - github-cli
           # LANGUAGES
           - dotnet-sdk
           - python
           - rust
           - jdk-openjdk
+          - nodejs
 
     - name: Install customization software
       pacman:
@@ -36,6 +38,7 @@
           - polybar
           - mate-panel
           - rofi
+          - feh
       shell: sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
     - name: Install additional software
@@ -62,11 +65,52 @@
 # TIDY SETUP
 #=====================================
 
+    - name: Create Coding directory
+      file:
+        path: ~/Coding
+        state: directory
 
+    - name: Create .config directory
+      file:
+        path: ~/.config
+        state: directory
+
+    - name: Create fonts directory
+      file:
+        path: ~/.local/share/fonts
+        state: directory
+        recurse: true
+    - name: Create Downloads directory
+      file:
+        path: ~/Downloads
+        state: directory
 
 #=====================================
 # GET CUSTOMIZATIONS
 #=====================================
+
+    #==== INSTALL FONTS ====
+
+
+    - name: Download Meslo Nerd Font
+      git:
+        repo: https://github.com/ryanoasis/nerd-fonts.git
+        dest: ~/Downloads
+
+    - name: Install Meslo Nerd Font
+      shell: cd ~/Downloads && ./install.sh Meslo 
+
+    - name: Install Font Awesome
+      pacman:
+        name:
+          - ttf-font-awesome
+
+    #==== ZSH-PLUGINS ====
+
+    - name: Install powerlevel10k
+      git:
+        repo: https://github.com/romkatv/powerlevel10k.git
+        dest: ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 
     - name: Install zsh-autosuggestions                                                                                                                                 
       git:                                                                                                                                                              
@@ -88,11 +132,45 @@
         repo: https://github.com/zsh-users/zsh-history-substring-search.git
         dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
 
-    - name: Create dotfiles directory:
+    #==== SPICETIFY ====
+
+    - name: Download Spicetify
+      shell: curl -fsSL https://raw.githubusercontent.com/spicetify/spicetify-cli/master/install.sh | sh
+
+    - name: Download Spicetify themes
+      git:
+        repo: https://github.com/spicetify/spicetify-themes.git
+        dest: ~/Downloads
+
+    - name: Create Spicetify directory
       file:
-        path: ~/dotfiles
+        path: ~/.config/spicetify/Themes
         state: directory
+        recurse: true
+
+    - name: Move Spicetify theme to config directroy
+      shell: cp -r ~/Downloads/spicetify-themes ~/.config/spicetify/Themes
+
+    - name: Apply Spicetify theme
+      shell: spicetify config current_theme default
+
+
+    #==== DOTFILES ====
 
     - name: Install dotfiles
       git:
         repo: https://github.com/MapManagement/dotfiles.git
+        dest: ~/
+
+    #==== DOWNLOAD AND INSTALL VIM PLUGINS ====
+
+    - name: Install vim-plug plugins
+      shell: nvim +PlugInstall +qa
+
+    - name: Install Rust coc
+      shell: nvim -c "CocInstall coc-rust-analyzer" -c "qa"
+
+#=====================================
+# GET LOCAL FILES
+#=====================================
+
