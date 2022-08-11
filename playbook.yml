@@ -2,6 +2,9 @@
 - name: Dev Setup
   host: localhost
   connection: local
+  vars:
+    is_desktop: true
+    external_drives: false
   tasks:
 
 #=====================================
@@ -9,6 +12,7 @@
 #=====================================
   
     - name: Install standard software
+      become: true
       pacman:
         name:
           - curl
@@ -16,6 +20,7 @@
           - git
 
     - name: Install development software
+      become: true
       pacman:
         name:
           # TOOLS
@@ -33,6 +38,7 @@
           - nodejs
 
     - name: Install customization software
+      become: true
       pacman:
         name:
           - polybar
@@ -42,6 +48,7 @@
       shell: sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
     - name: Install additional software
+      become: true
       pacman:
         name:
           # DAILY TASKS
@@ -57,14 +64,26 @@
           - discord
 
     - name: Install virtualization software
+      become: true
       pacman:
         name:
           - virt-manager
+          - qemu
+          - libvirt
+          - ovmf
+          - bridge-utils
+      when: is_desktop == true
 
 #=====================================
 # TIDY SETUP
 #=====================================
 
+    - name: Change default shell to zsh
+      become: true
+      user:
+        name: "{{ ansible_user_id }}"
+        shell: /bin/zsh
+        
     - name: Create Coding directory
       file:
         path: ~/Coding
@@ -85,12 +104,33 @@
         path: ~/Downloads
         state: directory
 
+    - name: Create Wallpapers directory
+      file:
+        path: ~/Pictures/Wallpapers
+        state: directory
+        recurse: true
+
+    - name: Create vms directory
+      file:
+        path: /vms
+        state: directory
+
+    - name: Create external directories
+      file:
+        path: ~/External/{{ item }}
+        state: directory
+        recurse: true
+        with_items: 
+          - 'Home'
+          - 'Pub'
+          - 'Cloud'
+      when: external_drives == true
+
 #=====================================
 # GET CUSTOMIZATIONS
 #=====================================
 
     #==== INSTALL FONTS ====
-
 
     - name: Download Meslo Nerd Font
       git:
@@ -98,9 +138,10 @@
         dest: ~/Downloads
 
     - name: Install Meslo Nerd Font
-      shell: cd ~/Downloads && ./install.sh Meslo 
+      shell: cd ~/Downloads/nerd-fonts && ./install.sh Meslo 
 
     - name: Install Font Awesome
+      become: true
       pacman:
         name:
           - ttf-font-awesome
@@ -148,12 +189,11 @@
         state: directory
         recurse: true
 
-    - name: Move Spicetify theme to config directroy
+    - name: Move Spicetify theme to config directory
       shell: cp -r ~/Downloads/spicetify-themes ~/.config/spicetify/Themes
 
     - name: Apply Spicetify theme
       shell: spicetify config current_theme default
-
 
     #==== DOTFILES ====
 
@@ -171,6 +211,31 @@
       shell: nvim -c "CocInstall coc-rust-analyzer" -c "qa"
 
 #=====================================
-# GET LOCAL FILES
+# COPY LOCAL FILES
 #=====================================
+
+    - name: Copy keyboard module
+      become: true
+      copy:
+        src: files/modprobe/hid_apple.conf
+        dest: /etc/modprobe.d/
+        owner: root
+        group: root
+        mode: 0644
+      when: is_desktop == true
+
+    - name: Load keyboard module
+      become: true
+      modprobe:
+        name: hid_apple
+        state: present
+      when: is_dektop == true
+
+    - name: Regenerate initramfs
+      shell: mkinitcpio -P
+
+#=====================================
+# VIRTUALIZATION
+#=====================================
+
 

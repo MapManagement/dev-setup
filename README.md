@@ -45,7 +45,7 @@ of every package I need.
 - [Discord](https://discord.com/)
 - [Spotify](https://www.spotify.com/de/)
 
-### Virtulization
+### Virtualization
 
 - [Virtual Machine Manager](https://github.com/virt-manager/virt-manager)
 - [QEMU](https://github.com/qemu/QEMU)
