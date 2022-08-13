@@ -162,11 +162,6 @@
       git:                                                                                                                                                              
         repo: https://github.com/zsh-users/zsh-syntax-highlighting.git                                                                                                  
         dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting                                                                                        
-                                                                                                                                                                        
-    - name: Install zsh-completions                                                                                                                                     
-      git:                                                                                                                                                              
-        repo: https://github.com/zsh-users/zsh-completions.git                                                                                                          
-        dest: ${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions
 
     - name: Install zsh-history-substring-search
       git:
@@ -233,9 +228,3 @@
 
     - name: Regenerate initramfs
       shell: mkinitcpio -P
-
-#=====================================
-# VIRTUALIZATION
-#=====================================
-
-

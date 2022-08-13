@@ -54,9 +54,17 @@ of every package I need.
 
 ## Customization
 
-I maintain all customizations in my [dotfiles](https://github.com/MapManagement/dotfiles) repository.
-When using the Ansbile configuration, the customizations are automatically copied and applied as soon
-as every application has been installed.  
-Here's a recent picture of my setup:
+I maintain all customizations in my [dotfiles](https://github.com/MapManagement/dotfiles)
+repository. When using the Ansbile configuration, the customizations are automatically copied and
+applied as soon as every application has been installed. Here's a recent picture of my setup:
+
+## VFIO
+
+My main machine uses vfio to pass a graphics card to specific virtual machines. Thus I can play
+games flawlessly in a Windows environment. Using Ansible, my configuration of setting up vfio
+on an Arch based system, didn't seem to be that easy. Therefore I decided to do this manually
+everytime I have to install a fresh Arch installation on my desktop machine. My guide can be found
+[here](https://github.com/MapManagement/gpu-passthrough).
+
 
 
