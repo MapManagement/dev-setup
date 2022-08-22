@@ -61,7 +61,7 @@
           - okular
           - thunar
           - gimp
-          - keepasscx
+          - keepassxc
           # BACKGROUND
           #- spotify
           - discord
@@ -140,9 +140,6 @@
         url: https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Meslo/L-DZ/Regular/complete/Meslo%20LG%20L%20DZ%20Regular%20Nerd%20Font%20Complete.ttf
         dest: ~/.local/share/fonts
 
-    - name: Install Meslo Nerd Font
-      shell: cd ~/Downloads/nerd-fonts && ./install.sh Meslo 
-
     - name: Install Font Awesome
       become: true
       pacman:
@@ -172,6 +169,11 @@
         dest: ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
 
     #==== SPICETIFY ====
+    
+    - name: Create Spicetify directory
+      file:
+        path: ~/.config/spicetify/Themes
+        recurse: true
 
     - name: Download Spicetify
       shell: curl -fsSL https://raw.githubusercontent.com/spicetify/spicetify-cli/master/install.sh | sh
@@ -179,19 +181,13 @@
     - name: Download Spicetify themes
       git:
         repo: https://github.com/spicetify/spicetify-themes.git
-        dest: ~/Downloads
-
-    - name: Create Spicetify directory
-      file:
-        path: ~/.config/spicetify/Themes
-        state: directory
-        recurse: true
+        dest: ~/.config/spicetify/spicetify-themes
 
     - name: Move Spicetify theme to config directory
-      shell: cp -r ~/Downloads/spicetify-themes ~/.config/spicetify/Themes
+      shell: cp -r * ~/.config/spicetify/spicetify-themes ~/.config/spicetify/Themes
 
     - name: Apply Spicetify theme
-      shell: ./.spicetify/spicetify config current_theme default
+      shell: spicetify config current_theme default
 
     #==== DOTFILES ====
 

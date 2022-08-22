@@ -5,4 +5,4 @@ if ! [ -x "$(command -v ansible)" ]; then
     sudo pacman -S ansible --noconfirm
 fi
 
-ansible-playbook install -K playbook.yml
+ansible-playbook -K playbook.yml
