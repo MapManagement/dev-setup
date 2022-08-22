@@ -37,7 +37,7 @@ Mount parititons:
 ```sh
 mount /dev/filesystem_parition /mnt
 mkdir /mnt/efi
-mount /dev/efi_partition
+mount /dev/efi_partition /mnt/efi
 swapon /dev/swap_partition
 ```
 
@@ -145,19 +145,23 @@ Install SDDM:
 ```sh
 pacman -S sddm
 systemctl enable sddm
-localectl set-x11-keymap de
 ```
 
 Install i3:
 
 ```sh
-pacman -S i3-gaps i3block i3lock
+pacman -S i3-gaps i3blocks i3lock
 ```
 
-Install git:
+Set X11-Keymap:
+```sh
+localectl set-x11-keymap de
+```
+
+Install git, sudo and Alacritty:
 
 ```sh
-pacman -S git
+pacman -S git sudo alacritty
 ```
 
 Grant root access to other users:
