@@ -32,6 +32,7 @@
           - github-cli
           # LANGUAGES
           - dotnet-sdk
+          - mono-msbuild
           - python
           - rust
           - jdk-openjdk
@@ -203,9 +204,6 @@
 
     - name: Install vim-plug plugins
       shell: nvim +PlugInstall +qa
-
-    - name: Install Rust coc
-      shell: nvim -c "CocInstall coc-rust-analyzer" -c "qa"
 
 #=====================================
 # COPY LOCAL FILES
